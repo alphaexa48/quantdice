@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b0f17" />
+  <title>DiceForge Studio — Strategy Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark">✦</span><div><b>DICEFORGE</b><small>STRATEGY STUDIO</small></div></div>
+      <nav><button class="nav-item active"><span>◈</span> Strategy Lab</button><button class="nav-item" data-scroll="analytics"><span>◫</span> Analytics</button><button class="nav-item" data-scroll="risk"><span>◌</span> Risk Center</button></nav>
+      <div class="side-bottom"><div class="live-chip"><i></i> SIMULATION MODE</div><p>Built for disciplined testing.<br><strong>Never risk more than you can lose.</strong></p><div class="version">DICEFORGE v1.0 / LOCAL</div></div>
+    </aside>
+    <main>
+      <header class="topbar"><div><div class="eyebrow">STRATEGY LAB / PLAYGROUND</div><h1>Build your edge.<br><em>Measure the risk.</em></h1></div><div class="header-actions"><div class="status"><i></i> Engine ready</div><button class="icon-btn" id="resetBtn" title="Reset simulation">↻</button></div></header>
+      <section class="workspace-grid">
+        <div class="panel control-panel"><div class="panel-head"><div><span class="section-kicker">01 / CONFIGURE</span><h2>Simulation deck</h2></div><span class="dot-label"><i></i> RANDOM SEED</span></div>
+          <div class="field"><label>Strategy profile</label><div class="select-wrap"><select id="strategy"><option value="hybrid">Hybrid Recovery + Paroli</option><option value="flat">Flat Stake Discipline</option><option value="martingale">Capped Recovery</option><option value="fibonacci">Fibonacci Ladder</option></select></div></div>
+          <div class="field-row"><div class="field"><label>Starting bankroll</label><div class="input-wrap"><span>$</span><input id="bankroll" type="number" value="100" min="1" step="1" /></div></div><div class="field"><label>Base bet <span id="basePctLabel">0.40%</span></label><input id="basePct" type="range" min="0.1" max="5" value="0.4" step="0.1" /></div></div>
+          <div class="field-row"><div class="field"><label>House edge</label><div class="input-wrap"><input id="edge" type="number" value="0.80" min="0.01" max="10" step="0.01" /><span>%</span></div></div><div class="field"><label>Payout multiplier</label><div class="input-wrap"><span>×</span><input id="payout" type="number" value="1.50" min="1.01" max="100" step="0.01" /></div></div></div>
+          <div class="field"><label>Session limits</label><div class="limit-row"><div><small>TAKE PROFIT</small><strong id="takeLabel">+5%</strong><input id="takeProfit" type="range" min="1" max="50" value="5" /></div><div><small>STOP LOSS</small><strong id="stopLabel">−20%</strong><input id="stopLoss" type="range" min="1" max="80" value="20" /></div><div><small>MAX ROLLS</small><strong id="rollLabel">3000</strong><input id="maxRolls" type="range" min="100" max="10000" step="100" value="3000" /></div></div></div>
+          <div class="safety-note"><span>⌁</span><div><b>House edge is always active.</b><p>This simulator models negative expected value. No progression can beat the house long-term.</p></div></div>
+          <button class="run-btn" id="runBtn"><span>▶</span> RUN SIMULATION <small>⌘ ↵</small></button>
+        </div>
+        <div class="panel insight-panel"><div class="panel-head"><div><span class="section-kicker">02 / READOUT</span><h2>Session telemetry</h2></div><span class="session-id" id="sessionId">SESSION —</span></div>
+          <div class="metrics"><div class="metric"><span>NET RESULT</span><strong id="netResult">$0.00</strong><small id="netPercent">0.00% bankroll</small></div><div class="metric"><span>WIN RATE</span><strong id="winRate">—</strong><small id="evLabel">Expected value: —</small></div><div class="metric"><span>PEAK DRAWDOWN</span><strong id="drawdown">—</strong><small>of starting bankroll</small></div></div>
+          <div class="chart-card"><div class="chart-top"><span>BANKROLL CURVE</span><span class="legend"><i class="legend-line"></i> Equity <i class="legend-dot"></i> Start</span></div><div class="chart-wrap"><canvas id="chart" width="800" height="280"></canvas><div class="chart-empty" id="chartEmpty"><span>◌</span><b>Ready when you are</b><small>Run a simulation to plot your equity curve</small></div></div></div>
+          <div class="last-roll"><div><span class="section-kicker">LATEST ROLL</span><strong id="lastRoll">—</strong></div><div class="roll-number" id="rollNumber">—</div><div class="roll-meta"><span id="rollOutcome">Awaiting run</span><small id="rollBet">Bet —</small></div></div>
+        </div>
+      </section>
+      <section class="bottom-grid" id="analytics"><div class="panel strategy-panel"><div class="panel-head"><div><span class="section-kicker">03 / STRATEGY MAP</span><h2>How this profile behaves</h2></div></div><div class="strategy-map" id="strategyMap"></div><div class="disclaimer"><span>!</span><p><b>Responsible play reminder</b><br>Past simulation results do not predict future outcomes. This is an educational tool, not financial advice.</p></div></div><div class="panel risk-panel" id="risk"><div class="panel-head"><div><span class="section-kicker">04 / RISK CENTER</span><h2>Exposure monitor</h2></div><span class="risk-badge">LOW INTENSITY</span></div><div class="risk-meter"><div class="meter-head"><span>Session exposure</span><b id="riskScore">0 / 100</b></div><div class="meter"><i id="meterFill"></i></div><p id="riskMessage">Configure your deck to see an exposure estimate.</p></div><div class="risk-list"><div><span>◒</span><p>Max single bet</p><b id="maxBet">$0.00</b></div><div><span>◷</span><p>Loss streak</p><b id="lossStreak">—</b></div><div><span>◈</span><p>Wager volume</p><b id="wagered">$0.00</b></div></div></div></section>
+      <footer><span>DiceForge is an independent analysis tool. Not affiliated with Crypto.Games.</span><span>SIMULATION ONLY · NO REAL BETS</span></footer>
+    </main>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>
