@@ -1,0 +1,2 @@
+# quantdice
+bot dice CG
