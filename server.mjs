@@ -10,7 +10,20 @@ const apiBase = process.env.CG_API_BASE || 'https://api.crypto.games/v1';
 const liveEnabled = process.env.ENABLE_LIVE_BETTING !== 'false';
 const maxLiveBet = Number(process.env.MAX_LIVE_BET || 0);
 const maxSessionLoss = Number(process.env.MAX_SESSION_LOSS || 0);
-const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8' };
+const types = {
+  '.html': 'text/html; charset=utf-8',
+  '.js': 'text/javascript; charset=utf-8',
+  '.mjs': 'text/javascript; charset=utf-8',
+  '.css': 'text/css; charset=utf-8',
+  '.json': 'application/json; charset=utf-8',
+  '.webmanifest': 'application/manifest+json; charset=utf-8',
+  '.svg': 'image/svg+xml',
+  '.png': 'image/png',
+  '.ico': 'image/x-icon',
+  '.txt': 'text/plain; charset=utf-8',
+  '.woff2': 'font/woff2',
+  '.map': 'application/json; charset=utf-8'
+};
 const sessions = new Map();
 
 function json(res, status, data) { res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' }); res.end(JSON.stringify(data)); }
@@ -360,7 +373,13 @@ const server = http.createServer(async (req, res) => {
     if (!file.startsWith(root)) { res.writeHead(403); return res.end('Forbidden'); }
     fs.readFile(file, (e, data) => {
       if (e) { res.writeHead(404); return res.end('Not found'); }
-      res.writeHead(200, { 'Content-Type': types[path.extname(file)] || 'application/octet-stream', 'Cache-Control': 'no-store' });
+      const headers = {
+        'Content-Type': types[path.extname(file)] || 'application/octet-stream',
+        'Cache-Control': 'no-store',
+        'X-Content-Type-Options': 'nosniff'
+      };
+      if (path.basename(file) === 'sw.js') headers['Service-Worker-Allowed'] = '/';
+      res.writeHead(200, headers);
       res.end(data);
     });
   } catch (e) {
