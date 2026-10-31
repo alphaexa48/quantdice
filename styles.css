@@ -9,3 +9,9 @@
 .param-item b{font-size:.88rem;font-weight:600;font-family:'DM Mono';color:#f5f5f5}
 .param-item b.gold{color:var(--gold)}
 @media(max-width:640px){.param-grid{grid-template-columns:1fr}}
+.install-btn{color:var(--gold)!important;border-color:#7f6a2b!important;background:#2b2718!important}
+.install-btn[hidden],.install-card[hidden]{display:none}
+.install-card{border-color:rgba(255,201,40,.28);background:linear-gradient(145deg,rgba(255,201,40,.07),var(--surface) 55%)}
+.install-card .primary{height:46px;margin-top:2px}
+.install-hint{color:var(--muted);font:10px/1.55 'DM Mono';margin:12px 0 0;text-align:center}
+@media(display-mode:standalone){.top{padding-top:calc(18px + env(safe-area-inset-top))}}

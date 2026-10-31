@@ -10,7 +10,16 @@ const apiBase = process.env.CG_API_BASE || 'https://api.crypto.games/v1';
 const liveEnabled = process.env.ENABLE_LIVE_BETTING !== 'false';
 const maxLiveBet = Number(process.env.MAX_LIVE_BET || 0);
 const maxSessionLoss = Number(process.env.MAX_SESSION_LOSS || 0);
-const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8' };
+const types = {
+  '.html': 'text/html; charset=utf-8',
+  '.js': 'text/javascript; charset=utf-8',
+  '.css': 'text/css; charset=utf-8',
+  '.webmanifest': 'application/manifest+json; charset=utf-8',
+  '.json': 'application/json; charset=utf-8',
+  '.png': 'image/png',
+  '.svg': 'image/svg+xml',
+  '.ico': 'image/x-icon'
+};
 const sessions = new Map();
 
 function json(res, status, data) { res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' }); res.end(JSON.stringify(data)); }
